@@ -1,0 +1,86 @@
+{% set name = "psi4" %}
+{% set version = "1.9.1" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  git_url: https://github.com/kzinovjev/psi4.git
+  git_tag: print-mbis-shells-nodebug
+
+build:
+  number: 0
+  binary_relocation: True
+  run_exports:
+    - {{ pin_subpackage('psi4', max_pin='x.x') }}
+  ignore_run_exports_from:
+    - zlib
+
+requirements:
+  build:
+    - gcc=12.3
+    - gxx=12.3
+    - cmake
+    - make
+    - llvm-openmp
+    - libblas * *openblas
+  host:
+    - eigen
+    - libboost-headers
+    - libblas * *openblas
+    - liblapack * *openblas
+    - numpy
+    - pybind11
+    - pybind11-abi
+    - python=3.11
+    - zlib
+    - libxc-c
+    - optking
+    - qcelemental
+    - qcengine
+  run:
+    - llvm-openmp
+    - libblas * *openblas
+    - liblapack
+    - msgpack-python
+    - networkx
+    - {{ pin_compatible('numpy') }}
+    - pydantic >=1.10
+    - python
+    - scipy
+    - {{ pin_compatible('optking', max_pin='x') }}
+    - {{ pin_compatible('qcelemental', max_pin='x') }}
+    - {{ pin_compatible('qcengine', max_pin='x') }}
+  run_constrained:
+    - pytest >=7.0.1,<8
+    - geometric >=1.0
+    - cppe ==0.3.1
+
+test:
+  imports:
+    - psi4
+
+about:
+  home: http://psicode.org
+  dev_url: https://github.com/psi4/psi4
+  doc_url: http://psicode.org/psi4manual/master/index.html
+  doc_source_url: https://github.com/psi4/psi4/tree/master/doc/sphinxman/source
+  license: LGPL-3.0-only AND BSD-3-Clause AND MIT
+  license_url: https://opensource.org/license/lgpl-3-0/
+  license_file:
+    - COPYING
+    - COPYING.LESSER
+    - THIRD-PARTY-LICENSES
+  license_family: LGPL
+  summary: Open-Source Quantum Chemistry - an electronic structure package in C++ driven by Python
+  description: |
+    Psi4 is an open-source suite of ab initio quantum chemistry programs designed for efficient,
+    high-accuracy simulations of a variety of molecular properties. We can routinely perform computations
+    with more than 2500 basis functions running serially or on multi-core machines. With computationally
+    demanding portions written in C++, Pybind11 exports many of the C++ classes into Python, and a
+    flexible Python driver, Psi4 strives to be friendly to both users and developers.
+
+extra:
+  recipe-maintainers:
+    - lohedges
